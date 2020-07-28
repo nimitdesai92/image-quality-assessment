@@ -10,17 +10,17 @@ from handlers.data_generator import TestDataGenerator
 
 def image_file_to_json(img_path):
     img_dir = os.path.dirname(img_path)
-    img_id = os.path.basename(img_path).split('.')[0]
+    img_id = os.path.basename(img_path).rsplit('.', 1)[0]
 
     return img_dir, [{'image_id': img_id}]
 
 
-def image_dir_to_json(img_dir, img_type='jpg'):
+def image_dir_to_json(img_dir, img_type='jpeg'):
     img_paths = glob.glob(os.path.join(img_dir, '*.'+img_type))
 
     samples = []
     for img_path in img_paths:
-        img_id = os.path.basename(img_path).split('.')[0]
+        img_id = os.path.basename(img_path).rsplit('.', 1)[0]
         samples.append({'image_id': img_id})
 
     return samples
@@ -30,13 +30,13 @@ def predict(model, data_generator):
     return model.predict_generator(data_generator, workers=8, use_multiprocessing=True, verbose=1)
 
 
-def main(base_model_name, weights_file, image_source, predictions_file, img_format='jpg'):
+def main(base_model_name, weights_file, image_source, predictions_file, img_format='jpeg'):
     # load samples
     if os.path.isfile(image_source):
         image_dir, samples = image_file_to_json(image_source)
     else:
         image_dir = image_source
-        samples = image_dir_to_json(image_dir, img_type='jpg')
+        samples = image_dir_to_json(image_dir, img_type='jpeg')
 
     # build model and load weights
     nima = Nima(base_model_name, weights=None)
