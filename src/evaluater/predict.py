@@ -6,7 +6,8 @@ import argparse
 from utils.utils import calc_mean_score, save_json
 from handlers.model_builder import Nima
 from handlers.data_generator import TestDataGenerator
-
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 def image_file_to_json(img_path):
     img_dir = os.path.dirname(img_path)
